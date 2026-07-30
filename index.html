@@ -3,307 +3,367 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kazan Egetläre — Центр управления карьерой</title>
-<style>
-:root{
-  --bg:#121212; --bg2:#181818; --bg3:#242424; --bg4:#2e2e2e;
-  --txt:#ffffff; --txt2:#b3b3b3; --txt3:#7a7a7a;
-  --accent:#1DB954; --accent2:#1ed760;
-  --yt:#FF0000; --vk:#0077FF; --tg:#2AABEE; --ym:#FFCC00; --tt:#69C9D0;
-  --warn:#ffb347; --err:#ff6b6b;
-  --radius:12px;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;min-height:100vh}
-a{color:var(--accent2)}
-/* ---------- HEADER ---------- */
-header{background:linear-gradient(135deg,#0f2d1a 0%,#121212 60%);padding:24px 20px 16px;border-bottom:1px solid #222}
-.h-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.logo{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#0a7a35);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex-shrink:0}
-h1{font-size:clamp(18px,4vw,26px);font-weight:700}
-.subtitle{color:var(--txt2);font-size:13px}
-.live-badge{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--bg3);padding:8px 14px;border-radius:20px;font-size:12px;color:var(--txt2)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--txt3);transition:background .3s}
-.dot.on{background:var(--accent);box-shadow:0 0 6px var(--accent)}
-.dot.err{background:var(--err)}
-/* ---------- NAV ---------- */
-nav{position:sticky;top:0;z-index:50;background:rgba(18,18,18,.95);backdrop-filter:blur(8px);border-bottom:1px solid #222;overflow-x:auto}
-.nav-inner{max-width:1200px;margin:0 auto;display:flex;gap:4px;padding:8px 12px;white-space:nowrap}
-.nav-btn{background:none;border:none;color:var(--txt2);padding:10px 18px;border-radius:20px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
-.nav-btn:hover{color:var(--txt);background:var(--bg3)}
-.nav-btn.active{background:var(--accent);color:#000}
-/* ---------- LAYOUT ---------- */
-main{max-width:1200px;margin:0 auto;padding:20px 14px 80px}
-.page{display:none;animation:fadeIn .3s ease}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-h2{font-size:20px;margin:8px 0 16px}
-h3{font-size:15px;margin-bottom:10px;color:var(--txt)}
-.muted{color:var(--txt2);font-size:13px;line-height:1.5}
-/* ---------- CARDS ---------- */
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.card{background:var(--bg2);border-radius:var(--radius);padding:18px;border:1px solid #262626;transition:transform .2s,border-color .2s}
-.card:hover{transform:translateY(-2px);border-color:#3a3a3a}
-.card .plat{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt2);margin-bottom:10px;font-weight:600}
-.pdot{width:10px;height:10px;border-radius:3px}
-.stat-val{font-size:clamp(22px,3vw,30px);font-weight:700;letter-spacing:-.5px}
-.stat-sub{font-size:12px;color:var(--txt3);margin-top:6px}
-.stat-sub b{color:var(--txt2)}
-.need-key{font-size:12px;color:var(--warn);margin-top:8px}
-/* ---------- CALC PANEL ---------- */
-.calc-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:14px}
-.calc{background:linear-gradient(160deg,#16261b,#181818);border:1px solid #234a2f;border-radius:var(--radius);padding:16px}
-.calc .cv{font-size:24px;font-weight:700;color:var(--accent2)}
-.calc .cl{font-size:12px;color:var(--txt2);margin-top:4px}
-/* ---------- CHARTS ---------- */
-.chart-box{background:var(--bg2);border:1px solid #262626;border-radius:var(--radius);padding:16px;margin-top:16px}
-canvas{width:100%;height:auto;display:block}
-/* ---------- QUICK ACTIONS ---------- */
-.qa-row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
-.btn{background:var(--accent);color:#000;border:none;padding:11px 20px;border-radius:22px;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
-.btn:hover{background:var(--accent2);transform:scale(1.03)}
-.btn.ghost{background:var(--bg3);color:var(--txt)}
-.btn.ghost:hover{background:var(--bg4)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-/* ---------- SOCIAL TABS ---------- */
-.sub-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.sub-tab{background:var(--bg3);border:none;color:var(--txt2);padding:9px 16px;border-radius:18px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px}
-.sub-tab.active{color:#fff;outline:2px solid var(--accent)}
-.social-pane{display:none}
-.social-pane.active{display:block;animation:fadeIn .25s}
-.iframe-wrap{background:var(--bg2);border:1px solid #262626;border-radius:var(--radius);overflow:hidden;min-height:200px}
-.iframe-wrap iframe{width:100%;height:560px;border:0;display:block;background:#0d0d0d}
-.iframe-note{padding:10px 14px;font-size:12px;color:var(--txt3);border-top:1px solid #222;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-/* ---------- AGENTS ---------- */
-.agents-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-.agent{background:var(--bg2);border:1px solid #262626;border-radius:var(--radius);padding:18px;cursor:pointer;transition:all .2s;text-align:left}
-.agent:hover{border-color:var(--accent);transform:translateY(-3px)}
-.agent .emoji{font-size:28px}
-.agent h4{margin:10px 0 6px;font-size:15px}
-.agent p{font-size:12px;color:var(--txt2);line-height:1.45}
-.agent-out{margin-top:18px;background:var(--bg2);border:1px solid #262626;border-radius:var(--radius);padding:20px;display:none}
-.agent-out.show{display:block;animation:fadeIn .3s}
-.agent-out h3{display:flex;align-items:center;gap:10px}
-.spinner{width:22px;height:22px;border:3px solid var(--bg4);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:14px auto}
-@keyframes spin{to{transform:rotate(360deg)}}
-.report{white-space:pre-wrap;font-size:13.5px;line-height:1.65;color:#ddd;margin-top:12px}
-/* ---------- SETTINGS ---------- */
-.set-group{background:var(--bg2);border:1px solid #262626;border-radius:var(--radius);padding:18px;margin-bottom:14px}
-.set-group h3{display:flex;align-items:center;gap:8px}
-label{display:block;font-size:12px;color:var(--txt2);margin:12px 0 5px;font-weight:600}
-input[type=text],input[type=password]{width:100%;background:var(--bg4);border:1px solid #3a3a3a;color:var(--txt);padding:11px 14px;border-radius:8px;font-size:13px;outline:none}
-input:focus{border-color:var(--accent)}
-.hint{font-size:11px;color:var(--txt3);margin-top:4px;line-height:1.4}
-/* ---------- STATUS / TOAST ---------- */
-#statusbar{position:fixed;bottom:0;left:0;right:0;background:#0d0d0dee;border-top:1px solid #222;padding:8px 16px;font-size:12px;color:var(--txt3);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;z-index:60}
-#toast{position:fixed;bottom:52px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--accent);color:#000;padding:11px 22px;border-radius:22px;font-weight:700;font-size:13px;opacity:0;pointer-events:none;transition:all .3s;z-index:70}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:600px){
-  .iframe-wrap iframe{height:440px}
-  .live-badge{margin-left:0}
-}
-</style>
+<title>Kazan Egetläre — центр управления карьерой</title>
+
+<meta name="description" content="Центр управления карьерой группы Казан Егетлэре: статистика YouTube, VK и Telegram, умная ссылка BandLink на все площадки, QR-код релиза, UTM-метки и аналитика Яндекс.Метрики в одном окне.">
+<meta name="theme-color" content="#121212">
+<meta name="format-detection" content="telephone=no">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kazan Egetläre">
+<meta property="og:title" content="Kazan Egetläre — центр управления карьерой">
+<meta property="og:description" content="Статистика площадок, умная ссылка BandLink на все стриминги и аналитика релиза «КАЗАН ЕГЕТЛЭРЕ/2026» в одном окне.">
+<meta property="og:image" content="https://music-bandlink.s3.yandex.net/img/bandlinks/HKtfe_rW2V9e9p.jpeg">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://mc.yandex.ru" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
 
+<a class="skip-link" href="#main">Перейти к содержимому</a>
+
 <header>
   <div class="h-inner">
-    <div class="logo">KE</div>
-    <div>
-      <h1>Kazan Egetläre</h1>
-      <div class="subtitle">Онлайн-центр управления карьерой артиста</div>
+    <div class="logo" aria-hidden="true">KE</div>
+    <div class="h-titles">
+      <h1>КАЗАН ЕГЕТЛЭРЕ</h1>
+      <p class="subtitle">Онлайн-центр управления карьерой артиста</p>
     </div>
-    <div class="live-badge"><span class="dot" id="liveDot"></span><span id="liveText">Ожидание API-ключей…</span></div>
+    <div class="live-badge" role="status" aria-live="polite">
+      <span class="dot" id="liveDot"></span><span id="liveText">Ожидание API-ключей…</span>
+    </div>
   </div>
 </header>
 
-<nav>
-  <div class="nav-inner">
-    <button class="nav-btn active" data-page="dash">📊 Дашборд</button>
-    <button class="nav-btn" data-page="social">🌐 Соцсети</button>
-    <button class="nav-btn" data-page="agents">🤖 ИИ-агенты</button>
-    <button class="nav-btn" data-page="settings">⚙️ Настройки</button>
+<nav aria-label="Разделы">
+  <div class="nav-inner" role="tablist">
+    <button class="nav-btn active" role="tab" aria-selected="true" aria-controls="page-dash" data-page="dash">📊 Дашборд</button>
+    <button class="nav-btn" role="tab" aria-selected="false" aria-controls="page-release" data-page="release">🔗 Релиз</button>
+    <button class="nav-btn" role="tab" aria-selected="false" aria-controls="page-social" data-page="social">🌐 Соцсети</button>
+    <button class="nav-btn" role="tab" aria-selected="false" aria-controls="page-analytics" data-page="analytics">📈 Аналитика</button>
+    <button class="nav-btn" role="tab" aria-selected="false" aria-controls="page-agents" data-page="agents">🤖 ИИ-агенты</button>
+    <button class="nav-btn" role="tab" aria-selected="false" aria-controls="page-settings" data-page="settings">⚙️ Настройки</button>
   </div>
 </nav>
 
-<main>
+<main id="main">
 
 <!-- ================= DASHBOARD ================= -->
-<section class="page active" id="page-dash">
+<section class="page active" id="page-dash" role="tabpanel" aria-label="Дашборд">
   <h2>Статистика в реальном времени</h2>
-  <p class="muted" id="dashHint">Данные загружаются напрямую из API соцсетей. Введите ключи во вкладке «⚙️ Настройки», чтобы увидеть реальные цифры. Автообновление — каждые 5 минут.</p>
+  <p class="muted">Данные загружаются напрямую из API площадок. Введите ключи во вкладке «⚙️ Настройки», чтобы увидеть реальные цифры. Автообновление — каждые 5 минут.</p>
 
   <div class="qa-row">
-    <button class="btn" onclick="refreshAll(true)">🔄 Обновить сейчас</button>
-    <button class="btn ghost" onclick="exportReport()">📄 Скачать отчет</button>
-    <button class="btn ghost" onclick="showPage('agents')">🤖 Запустить анализ</button>
+    <button class="btn" data-action="refresh">Обновить сейчас</button>
+    <button class="btn ghost" data-action="export">Скачать отчет</button>
+    <button class="btn ghost" data-action="goto-agents">Запустить анализ</button>
   </div>
+
+  <!-- Smart link summary, filled from /api/bandlink -->
+  <article class="promo" id="promoCard" aria-live="polite">
+    <div class="promo-art">
+      <img id="promoCover" alt="" width="96" height="96" hidden>
+      <div class="promo-art-fallback" id="promoCoverFallback">KE</div>
+    </div>
+    <div class="promo-body">
+      <p class="promo-kicker">Актуальный релиз · умная ссылка BandLink</p>
+      <h3 id="promoTitle" class="promo-title skeleton-text">Загружаю данные BandLink…</h3>
+      <p class="promo-sub" id="promoSub">Одна ссылка ведет слушателя на его площадку — Яндекс Музыка, VK и другие.</p>
+      <div class="promo-actions">
+        <a class="btn" id="promoOpen" href="https://band.link/HKtfe" target="_blank" rel="noopener" data-goal="bandlink_open" data-source="dashboard">Открыть смарт-ссылку</a>
+        <button class="btn ghost" data-action="copy-link" data-source="dashboard">Копировать ссылку</button>
+        <button class="btn ghost" data-action="goto-release">Материалы релиза</button>
+      </div>
+    </div>
+  </article>
 
   <div class="grid" id="statGrid">
     <div class="card" id="card-yt">
       <div class="plat"><span class="pdot" style="background:var(--yt)"></span>YouTube</div>
       <div class="stat-val" data-f="yt-subs">—</div>
       <div class="stat-sub">подписчики · <b data-f="yt-views">—</b> просмотров · <b data-f="yt-videos">—</b> видео</div>
-      <div class="need-key" data-k="yt">⚠️ Нужен API-ключ и ID канала</div>
+      <p class="need-key" data-k="yt">Нужен API-ключ и ID канала</p>
     </div>
     <div class="card" id="card-vk">
       <div class="plat"><span class="pdot" style="background:var(--vk)"></span>VK</div>
       <div class="stat-val" data-f="vk-members">—</div>
-      <div class="stat-sub">участники группы · посты: <b data-f="vk-posts">—</b></div>
-      <div class="need-key" data-k="vk">⚠️ Нужен сервисный ключ VK и ID группы</div>
+      <div class="stat-sub">участники сообщества · постов: <b data-f="vk-posts">—</b></div>
+      <p class="need-key" data-k="vk">Нужен сервисный ключ VK и адрес сообщества</p>
     </div>
     <div class="card" id="card-tg">
       <div class="plat"><span class="pdot" style="background:var(--tg)"></span>Telegram</div>
       <div class="stat-val" data-f="tg-members">—</div>
       <div class="stat-sub">подписчики канала</div>
-      <div class="need-key" data-k="tg">⚠️ Нужен Bot Token и @username канала</div>
+      <p class="need-key" data-k="tg">Нужен Bot Token и @username канала</p>
     </div>
     <div class="card" id="card-ym">
-      <div class="plat"><span class="pdot" style="background:var(--ym)"></span>Яндекс.Музыка</div>
-      <div class="stat-val">🎧</div>
-      <div class="stat-sub">Публичного API статистики нет — плеер исполнителя доступен во вкладке «Соцсети»</div>
+      <div class="plat"><span class="pdot" style="background:var(--ym)"></span>Яндекс Музыка</div>
+      <div class="stat-val" data-f="ym-platforms">—</div>
+      <div class="stat-sub">площадок в умной ссылке · статистика прослушиваний — в кабинете BandLink</div>
+      <a class="inline-link" href="https://band.link/manage/analytics/yandex-music" target="_blank" rel="noopener" data-goal="bandlink_analytics" data-source="dashboard">Открыть статистику BandLink</a>
     </div>
   </div>
 
-  <h3 style="margin-top:26px">Автоматические расчеты</h3>
+  <h3 class="section-head">Автоматические расчеты</h3>
   <div class="calc-grid">
     <div class="calc"><div class="cv" id="calcReach">—</div><div class="cl">Общий охват (YouTube + VK + Telegram)</div></div>
-    <div class="calc"><div class="cv" id="calcEng">—</div><div class="cl">Вовлеченность VK: (лайки+комменты)/просмотры</div></div>
+    <div class="calc"><div class="cv" id="calcEng">—</div><div class="cl">Вовлеченность VK: (лайки + комменты) / просмотры</div></div>
     <div class="calc"><div class="cv" id="calcAvgViews">—</div><div class="cl">Среднее просмотров на видео YouTube</div></div>
     <div class="calc"><div class="cv" id="calcGrowth">—</div><div class="cl">Прогноз аудитории через 30 дней</div></div>
   </div>
 
   <div class="chart-box">
-    <h3>Аудитория по платформам</h3>
-    <canvas id="chartPlatforms" width="1100" height="360"></canvas>
+    <h3>Аудитория по площадкам</h3>
+    <canvas id="chartPlatforms" role="img" aria-label="Столбчатая диаграмма аудитории по площадкам"></canvas>
   </div>
   <div class="chart-box">
-    <h3>Динамика общего охвата (по замерам этой сессии и истории браузера)</h3>
-    <canvas id="chartHistory" width="1100" height="320"></canvas>
-    <p class="hint">История накапливается автоматически при каждом обновлении данных и хранится локально в вашем браузере.</p>
+    <h3>Динамика общего охвата</h3>
+    <canvas id="chartHistory" role="img" aria-label="График динамики общего охвата"></canvas>
+    <p class="hint">История накапливается при каждом обновлении данных и хранится локально в этом браузере. Экспорт — во вкладке «📈 Аналитика».</p>
   </div>
 </section>
 
+<!-- ================= RELEASE / BANDLINK ================= -->
+<section class="page" id="page-release" role="tabpanel" aria-label="Релиз" hidden>
+  <h2>Релиз и умная ссылка</h2>
+  <p class="muted">Все промо-материалы одной ссылки BandLink: площадки, QR-код для афиш и сторис, готовые ссылки с UTM-метками для каждого канала.</p>
+
+  <article class="release" id="releaseCard">
+    <div class="release-cover">
+      <img id="releaseCover" alt="" hidden>
+      <div class="release-cover-skeleton" id="releaseCoverSkeleton"></div>
+    </div>
+    <div class="release-info">
+      <p class="release-kicker" id="releaseArtist">Загрузка…</p>
+      <h3 class="release-title" id="releaseTitle">Получаю данные с band.link</h3>
+      <p class="release-desc" id="releaseDesc"></p>
+
+      <div class="link-field">
+        <code id="releaseUrl">https://band.link/HKtfe</code>
+        <button class="btn small" data-action="copy-link" data-source="release">Копировать</button>
+      </div>
+
+      <div class="qa-row">
+        <a class="btn" id="releaseOpen" href="https://band.link/HKtfe" target="_blank" rel="noopener" data-goal="bandlink_open" data-source="release">Открыть ссылку</a>
+        <button class="btn ghost" data-action="share" hidden id="shareBtn">Поделиться…</button>
+        <a class="btn ghost" href="https://band.link/manage/analytics/yandex-music" target="_blank" rel="noopener" data-goal="bandlink_analytics" data-source="release">Статистика BandLink</a>
+      </div>
+      <p class="err-note" id="releaseError" hidden></p>
+    </div>
+  </article>
+
+  <h3 class="section-head">Площадки в умной ссылке</h3>
+  <div class="platforms" id="platformList">
+    <div class="plat-skeleton"></div>
+    <div class="plat-skeleton"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <h3>QR-код для афиш и сторис</h3>
+      <p class="hint">Код ведет на умную ссылку — сканирование открывает площадку слушателя. Генерируется на устройстве, без внешних сервисов.</p>
+      <div class="qr-wrap">
+        <canvas id="qrCanvas" role="img" aria-label="QR-код умной ссылки"></canvas>
+      </div>
+      <div class="qa-row">
+        <button class="btn small" data-action="qr-png">Скачать PNG</button>
+        <button class="btn small ghost" data-action="qr-svg">Скачать SVG</button>
+      </div>
+      <label for="qrTarget">Что закодировать</label>
+      <input type="text" id="qrTarget" spellcheck="false" autocomplete="off">
+      <p class="hint">По умолчанию — умная ссылка. Можно подставить ссылку с UTM-меткой, чтобы отличать переходы с афиш.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Ссылки с UTM-метками</h3>
+      <p class="hint">BandLink покажет, с какого канала пришел слушатель, а Яндекс.Метрика — что он делал на сайте. Пометьте каждый канал своей ссылкой.</p>
+      <label for="utmCampaign">Кампания</label>
+      <input type="text" id="utmCampaign" placeholder="kazan-egetlare-2026" spellcheck="false" autocomplete="off">
+      <div class="utm-list" id="utmList"></div>
+    </div>
+  </div>
+
+  <h3 class="section-head">Поделиться в один клик</h3>
+  <div class="qa-row" id="shareRow"></div>
+</section>
+
 <!-- ================= SOCIAL ================= -->
-<section class="page" id="page-social">
+<section class="page" id="page-social" role="tabpanel" aria-label="Соцсети" hidden>
   <h2>Соцсети внутри сайта</h2>
-  <p class="muted">Каждая платформа — в отдельной вкладке. Ссылки/ID задаются в «⚙️ Настройки».</p>
-  <div class="sub-tabs">
-    <button class="sub-tab active" data-social="vk"><span class="pdot" style="background:var(--vk)"></span>VK</button>
-    <button class="sub-tab" data-social="yt"><span class="pdot" style="background:var(--yt)"></span>YouTube</button>
-    <button class="sub-tab" data-social="tg"><span class="pdot" style="background:var(--tg)"></span>Telegram</button>
-    <button class="sub-tab" data-social="ym"><span class="pdot" style="background:var(--ym)"></span>Яндекс.Музыка</button>
-    <button class="sub-tab" data-social="tt"><span class="pdot" style="background:var(--tt)"></span>TikTok</button>
+  <p class="muted">Каждая площадка — в отдельной вкладке. Адреса и ID задаются в «⚙️ Настройки».</p>
+  <div class="sub-tabs" role="tablist" aria-label="Площадки">
+    <button class="sub-tab active" role="tab" aria-selected="true" data-social="vk"><span class="pdot" style="background:var(--vk)"></span>VK</button>
+    <button class="sub-tab" role="tab" aria-selected="false" data-social="yt"><span class="pdot" style="background:var(--yt)"></span>YouTube</button>
+    <button class="sub-tab" role="tab" aria-selected="false" data-social="tg"><span class="pdot" style="background:var(--tg)"></span>Telegram</button>
+    <button class="sub-tab" role="tab" aria-selected="false" data-social="ym"><span class="pdot" style="background:var(--ym)"></span>Яндекс Музыка</button>
+    <button class="sub-tab" role="tab" aria-selected="false" data-social="tt"><span class="pdot" style="background:var(--tt)"></span>TikTok</button>
   </div>
 
-  <div class="social-pane active" id="social-vk">
+  <div class="social-pane active" id="social-vk" role="tabpanel">
     <div class="iframe-wrap">
-      <div id="vk_widget_holder" style="min-height:500px"></div>
-      <div class="iframe-note"><span>Виджет сообщества VK (официальный)</span><a id="vkLink" href="#" target="_blank" rel="noopener">Открыть в VK ↗</a></div>
+      <div id="vk_widget_holder" class="widget-holder"></div>
+      <div class="iframe-note"><span>Виджет сообщества VK</span><a id="vkLink" href="https://vk.com/kazan_egetlare" target="_blank" rel="noopener">Открыть в VK</a></div>
     </div>
   </div>
 
-  <div class="social-pane" id="social-yt">
+  <div class="social-pane" id="social-yt" role="tabpanel" hidden>
     <div class="iframe-wrap">
-      <iframe id="ytFrame" src="about:blank" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      <div class="iframe-note"><span>Последние видео канала (uploads-плейлист)</span><a id="ytLink" href="#" target="_blank" rel="noopener">Открыть канал ↗</a></div>
+      <iframe id="ytFrame" src="about:blank" title="Видео канала YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      <div class="iframe-note"><span>Последние видео канала</span><a id="ytLink" href="https://www.youtube.com/" target="_blank" rel="noopener">Открыть канал</a></div>
     </div>
   </div>
 
-  <div class="social-pane" id="social-tg">
+  <div class="social-pane" id="social-tg" role="tabpanel" hidden>
     <div class="iframe-wrap">
-      <div id="tgPostHolder" style="padding:16px"></div>
-      <div class="iframe-note"><span>Telegram: встроенный пост канала (виджет t.me)</span><a id="tgLink" href="#" target="_blank" rel="noopener">Открыть канал ↗</a></div>
+      <div id="tgPostHolder" class="widget-holder pad"></div>
+      <div class="iframe-note"><span>Встроенный пост канала</span><a id="tgLink" href="https://t.me/" target="_blank" rel="noopener">Открыть канал</a></div>
     </div>
   </div>
 
-  <div class="social-pane" id="social-ym">
+  <div class="social-pane" id="social-ym" role="tabpanel" hidden>
     <div class="iframe-wrap">
-      <iframe id="ymFrame" src="about:blank" title="Яндекс.Музыка" loading="lazy"></iframe>
-      <div class="iframe-note"><span>Плеер исполнителя Яндекс.Музыки</span><a id="ymLink" href="#" target="_blank" rel="noopener">Открыть исполнителя ↗</a></div>
+      <iframe id="ymFrame" src="about:blank" title="Плеер Яндекс Музыки" loading="lazy"></iframe>
+      <div class="iframe-note"><span>Плеер исполнителя Яндекс Музыки</span><a id="ymLink" href="https://music.yandex.ru/artist/4160836" target="_blank" rel="noopener">Открыть исполнителя</a></div>
     </div>
   </div>
 
-  <div class="social-pane" id="social-tt">
+  <div class="social-pane" id="social-tt" role="tabpanel" hidden>
     <div class="iframe-wrap">
-      <iframe id="ttFrame" src="about:blank" title="TikTok" loading="lazy"></iframe>
-      <div class="iframe-note"><span>Профиль TikTok (embed)</span><a id="ttLink" href="#" target="_blank" rel="noopener">Открыть TikTok ↗</a></div>
+      <iframe id="ttFrame" src="about:blank" title="Профиль TikTok" loading="lazy"></iframe>
+      <div class="iframe-note"><span>Профиль TikTok</span><a id="ttLink" href="https://www.tiktok.com/" target="_blank" rel="noopener">Открыть TikTok</a></div>
     </div>
+  </div>
+</section>
+
+<!-- ================= ANALYTICS ================= -->
+<section class="page" id="page-analytics" role="tabpanel" aria-label="Аналитика" hidden>
+  <h2>Аналитика</h2>
+  <p class="muted">Три источника цифр: BandLink считает переходы по умной ссылке, Яндекс.Метрика — поведение на этом сайте, API площадок — размер аудитории.</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="plat"><span class="pdot" style="background:var(--ym)"></span>Яндекс.Метрика</div>
+      <p class="metric-state" id="metrikaState">Проверяю подключение…</p>
+      <p class="hint" id="metrikaHint"></p>
+      <div class="qa-row tight">
+        <a class="btn small ghost" id="metrikaDash" href="https://metrika.yandex.ru/list?category=myCounters&amp;sort_by=Name" target="_blank" rel="noopener">Список счетчиков</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="plat"><span class="pdot" style="background:var(--accent)"></span>BandLink</div>
+      <p class="metric-state" id="bandlinkState">Проверяю умную ссылку…</p>
+      <p class="hint">Переходы, площадки и география — в кабинете BandLink (нужен вход в аккаунт артиста).</p>
+      <div class="qa-row tight">
+        <a class="btn small ghost" href="https://band.link/manage/analytics/yandex-music" target="_blank" rel="noopener" data-goal="bandlink_analytics" data-source="analytics">Статистика по стримам</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="plat"><span class="pdot" style="background:var(--vk)"></span>Локальные замеры</div>
+      <p class="metric-state" id="historyState">—</p>
+      <p class="hint">Каждое обновление дашборда сохраняет замер охвата в этом браузере. Выгрузите CSV, чтобы построить длинный тренд.</p>
+      <div class="qa-row tight">
+        <button class="btn small ghost" data-action="export-csv">Скачать CSV</button>
+        <button class="btn small ghost" data-action="clear-history">Очистить историю</button>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="section-head">Какие события уходят в Метрику</h3>
+  <div class="panel">
+    <ul class="goal-list" id="goalList"></ul>
+    <p class="hint">Названия целей совпадают с именами событий — создайте цели типа «JavaScript-событие» с этими идентификаторами в интерфейсе Метрики, чтобы видеть конверсии.</p>
   </div>
 </section>
 
 <!-- ================= AGENTS ================= -->
-<section class="page" id="page-agents">
+<section class="page" id="page-agents" role="tabpanel" aria-label="ИИ-агенты" hidden>
   <h2>ИИ-агенты продвижения</h2>
-  <p class="muted">Нажмите на агента — через 2 секунды он выдаст отчет на основе <b>текущих реальных данных</b> дашборда.</p>
-  <div class="agents-grid" style="margin-top:16px">
-    <button class="agent" onclick="runAgent('analyst')"><span class="emoji">📈</span><h4>Аналитик</h4><p>Разбирает статистику по платформам и выявляет тренды</p></button>
-    <button class="agent" onclick="runAgent('strategist')"><span class="emoji">🎯</span><h4>Стратег</h4><p>Советует, когда и как выпускать релизы</p></button>
-    <button class="agent" onclick="runAgent('copywriter')"><span class="emoji">✍️</span><h4>Копирайтер</h4><p>Генерирует готовые посты для VK и Telegram</p></button>
-    <button class="agent" onclick="runAgent('forecaster')"><span class="emoji">🔮</span><h4>Прогнозист</h4><p>Предсказывает рост аудитории на 30/90 дней</p></button>
-    <button class="agent" onclick="runAgent('ideator')"><span class="emoji">💡</span><h4>Идейный</h4><p>Предлагает темы для новых песен и клипов</p></button>
+  <p class="muted">Агент разбирает <b>текущие реальные данные</b> дашборда и умную ссылку релиза и выдает отчет.</p>
+  <div class="agents-grid">
+    <button class="agent" data-agent="analyst"><span class="emoji" aria-hidden="true">📈</span><h4>Аналитик</h4><p>Разбирает статистику по площадкам и выявляет тренды</p></button>
+    <button class="agent" data-agent="strategist"><span class="emoji" aria-hidden="true">🎯</span><h4>Стратег</h4><p>Советует, когда и как выпускать релизы</p></button>
+    <button class="agent" data-agent="copywriter"><span class="emoji" aria-hidden="true">✍️</span><h4>Копирайтер</h4><p>Генерирует готовые посты со ссылкой на релиз</p></button>
+    <button class="agent" data-agent="forecaster"><span class="emoji" aria-hidden="true">🔮</span><h4>Прогнозист</h4><p>Предсказывает рост аудитории на 30/90 дней</p></button>
+    <button class="agent" data-agent="ideator"><span class="emoji" aria-hidden="true">💡</span><h4>Идейный</h4><p>Предлагает темы для новых песен и клипов</p></button>
   </div>
-  <div class="agent-out" id="agentOut">
+  <div class="agent-out" id="agentOut" hidden>
     <h3><span id="agentTitle"></span></h3>
     <div class="spinner" id="agentSpin"></div>
     <div class="report" id="agentReport"></div>
-    <div class="qa-row" id="agentActions" style="display:none">
-      <button class="btn" onclick="copyReport()">📋 Копировать</button>
-      <button class="btn ghost" onclick="saveReport()">💾 Сохранить .txt</button>
+    <div class="qa-row" id="agentActions" hidden>
+      <button class="btn" data-action="copy-report">Копировать</button>
+      <button class="btn ghost" data-action="save-report">Сохранить .txt</button>
     </div>
   </div>
 </section>
 
 <!-- ================= SETTINGS ================= -->
-<section class="page" id="page-settings">
+<section class="page" id="page-settings" role="tabpanel" aria-label="Настройки" hidden>
   <h2>Настройки подключений</h2>
-  <p class="muted">Ключи хранятся <b>только в вашем браузере</b> (localStorage) и никуда не отправляются, кроме официальных API соцсетей.</p>
+  <p class="muted">Ключи хранятся <b>только в этом браузере</b> (localStorage) и уходят лишь в официальные API площадок.</p>
 
-  <div class="set-group" style="margin-top:16px">
+  <div class="set-group">
+    <h3><span class="pdot" style="background:var(--accent)"></span>BandLink</h3>
+    <label for="in-bandlinkCode">Код умной ссылки (band.link/…)</label>
+    <input type="text" id="in-bandlinkCode" placeholder="HKtfe" spellcheck="false" autocomplete="off">
+    <p class="hint">Взять из адреса ссылки в кабинете BandLink. Данные релиза (обложка, площадки) подтягиваются автоматически.</p>
+  </div>
+
+  <div class="set-group">
+    <h3><span class="pdot" style="background:var(--ym)"></span>Яндекс.Метрика</h3>
+    <label for="in-metrikaId">Номер счетчика</label>
+    <input type="text" id="in-metrikaId" placeholder="например 98765432" inputmode="numeric" autocomplete="off">
+    <p class="hint">Номер виден в <a href="https://metrika.yandex.ru/list?category=myCounters&amp;sort_by=Name" target="_blank" rel="noopener">списке счетчиков</a>. Значение здесь включает счетчик только в этом браузере — чтобы считать всех посетителей, задайте переменную окружения <code>YANDEX_METRIKA_ID</code> в настройках проекта Netlify.</p>
+  </div>
+
+  <div class="set-group">
     <h3><span class="pdot" style="background:var(--yt)"></span>YouTube Data API v3</h3>
-    <label>API-ключ</label>
-    <input type="password" id="in-ytKey" placeholder="AIza...">
-    <div class="hint">Получить: <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud Console</a> → включить YouTube Data API v3 → создать ключ.</div>
-    <label>ID канала (UC…) или @handle</label>
-    <input type="text" id="in-ytChannel" placeholder="UCxxxxxxxx или @kazanegetlere">
+    <label for="in-ytKey">API-ключ</label>
+    <input type="password" id="in-ytKey" placeholder="AIza…" autocomplete="off">
+    <p class="hint">Получить: <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud Console</a> → включить YouTube Data API v3 → создать ключ.</p>
+    <label for="in-ytChannel">ID канала (UC…) или @handle</label>
+    <input type="text" id="in-ytChannel" placeholder="UCxxxxxxxx или @kazanegetlare" spellcheck="false" autocomplete="off">
   </div>
 
   <div class="set-group">
     <h3><span class="pdot" style="background:var(--vk)"></span>VK API</h3>
-    <label>Сервисный ключ доступа</label>
-    <input type="password" id="in-vkKey" placeholder="сервисный ключ приложения VK">
-    <div class="hint">Получить: <a href="https://dev.vk.com/" target="_blank" rel="noopener">dev.vk.com</a> → создать приложение → «Сервисный ключ доступа». Запросы идут через JSONP (работает без сервера).</div>
-    <label>Короткое имя или ID группы</label>
-    <input type="text" id="in-vkGroup" placeholder="например kazanegetlere или 123456">
+    <label for="in-vkKey">Сервисный ключ доступа</label>
+    <input type="password" id="in-vkKey" placeholder="сервисный ключ приложения VK" autocomplete="off">
+    <p class="hint">Получить: <a href="https://dev.vk.com/" target="_blank" rel="noopener">dev.vk.com</a> → создать приложение → «Сервисный ключ доступа». Запросы идут через JSONP, сервер не нужен.</p>
+    <label for="in-vkGroup">Короткое имя или ID сообщества</label>
+    <input type="text" id="in-vkGroup" placeholder="kazan_egetlare" spellcheck="false" autocomplete="off">
   </div>
 
   <div class="set-group">
     <h3><span class="pdot" style="background:var(--tg)"></span>Telegram Bot API</h3>
-    <label>Bot Token</label>
-    <input type="password" id="in-tgToken" placeholder="123456:ABC-DEF...">
-    <div class="hint">Получить у <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>. Бота нужно добавить в канал как администратора, чтобы он видел число подписчиков.</div>
-    <label>@username канала</label>
-    <input type="text" id="in-tgChannel" placeholder="@kazanegetlere">
-    <label>Ссылка на пост для встраивания (t.me/канал/номер)</label>
-    <input type="text" id="in-tgPost" placeholder="kazanegetlere/12">
+    <label for="in-tgToken">Bot Token</label>
+    <input type="password" id="in-tgToken" placeholder="123456:ABC-DEF…" autocomplete="off">
+    <p class="hint">Получить у <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>. Бота нужно добавить в канал администратором, чтобы он видел число подписчиков.</p>
+    <label for="in-tgChannel">@username канала</label>
+    <input type="text" id="in-tgChannel" placeholder="@kazanegetlare" spellcheck="false" autocomplete="off">
+    <label for="in-tgPost">Ссылка на пост для встраивания</label>
+    <input type="text" id="in-tgPost" placeholder="kazanegetlare/12" spellcheck="false" autocomplete="off">
   </div>
 
   <div class="set-group">
-    <h3><span class="pdot" style="background:var(--ym)"></span>Яндекс.Музыка</h3>
-    <label>ID исполнителя (число из ссылки music.yandex.ru/artist/…)</label>
-    <input type="text" id="in-ymArtist" placeholder="например 3121459">
-    <div class="hint">Публичного API статистики у Яндекс.Музыки нет — встроится официальный плеер исполнителя.</div>
+    <h3><span class="pdot" style="background:var(--ym)"></span>Яндекс Музыка</h3>
+    <label for="in-ymArtist">ID исполнителя</label>
+    <input type="text" id="in-ymArtist" placeholder="4160836" inputmode="numeric" autocomplete="off">
+    <p class="hint">Число из адреса music.yandex.ru/artist/… Подставляется автоматически из умной ссылки. Публичного API статистики у сервиса нет — встраивается официальный плеер.</p>
   </div>
 
   <div class="set-group">
-    <h3><span class="pdot" style="background:var(--tt)"></span>TikTok (необязательно)</h3>
-    <label>@username</label>
-    <input type="text" id="in-ttUser" placeholder="@kazanegetlere">
+    <h3><span class="pdot" style="background:var(--tt)"></span>TikTok</h3>
+    <label for="in-ttUser">@username</label>
+    <input type="text" id="in-ttUser" placeholder="@kazanegetlare" spellcheck="false" autocomplete="off">
   </div>
 
   <div class="qa-row">
-    <button class="btn" onclick="saveSettings()">💾 Сохранить и подключиться</button>
-    <button class="btn ghost" onclick="clearSettings()">🗑 Очистить ключи</button>
+    <button class="btn" data-action="save-settings">Сохранить и подключиться</button>
+    <button class="btn ghost" data-action="clear-settings">Очистить ключи</button>
   </div>
 </section>
 
@@ -313,560 +373,9 @@ input:focus{border-color:var(--accent)}
   <span id="sbLeft">Готов к работе</span>
   <span id="sbRight">Следующее автообновление: —</span>
 </div>
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
-<script>
-/* ==================================================================
-   Kazan Egetläre — Career Dashboard (zero dependencies, real APIs)
-   ================================================================== */
-"use strict";
-
-const LS_KEYS = "ke_settings_v1";
-const LS_HIST = "ke_history_v1";
-const REFRESH_MS = 5 * 60 * 1000; // 5 минут
-
-// ---------- state ----------
-let S = loadSettings();
-let DATA = { yt:null, vk:null, tg:null, fetchedAt:null };
-let refreshTimer = null, countdownTimer = null, nextRefreshAt = 0;
-
-function loadSettings(){
-  try { return JSON.parse(localStorage.getItem(LS_KEYS)) || {}; } catch(e){ return {}; }
-}
-function persistSettings(){ localStorage.setItem(LS_KEYS, JSON.stringify(S)); }
-
-// ---------- helpers ----------
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-function fmt(n){
-  if(n===null||n===undefined||isNaN(n)) return "—";
-  n = Number(n);
-  if(n>=1e6) return (n/1e6).toFixed(2).replace(/\.?0+$/,"")+" млн";
-  if(n>=1e3) return (n/1e3).toFixed(1).replace(/\.0$/,"")+" тыс";
-  return n.toLocaleString("ru-RU");
-}
-function toast(msg){
-  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 2600);
-}
-function setLive(state, text){
-  const d = $("#liveDot");
-  d.className = "dot" + (state==="on"?" on":state==="err"?" err":"");
-  $("#liveText").textContent = text;
-}
-function setStatus(msg){ $("#sbLeft").textContent = msg; }
-
-// ---------- формулы (авторасчеты) ----------
-function calculateEngagement(views, likes, comments){
-  if(!views) return null;
-  return ((likes + comments) / views * 100);
-}
-function forecastAudience(total, dailyGrowthRate, days){
-  // сложный рост: total * (1+r)^days
-  return Math.round(total * Math.pow(1 + dailyGrowthRate, days));
-}
-
-// ---------- навигация ----------
-$$(".nav-btn").forEach(b => b.addEventListener("click", () => showPage(b.dataset.page)));
-function showPage(id){
-  $$(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.page===id));
-  $$(".page").forEach(p => p.classList.toggle("active", p.id==="page-"+id));
-  window.scrollTo({top:0, behavior:"smooth"});
-}
-$$(".sub-tab").forEach(b => b.addEventListener("click", () => {
-  $$(".sub-tab").forEach(x=>x.classList.toggle("active", x===b));
-  $$(".social-pane").forEach(p=>p.classList.toggle("active", p.id==="social-"+b.dataset.social));
-}));
-
-// ---------- настройки UI ----------
-const FIELDS = ["ytKey","ytChannel","vkKey","vkGroup","tgToken","tgChannel","tgPost","ymArtist","ttUser"];
-function fillSettingsForm(){ FIELDS.forEach(f => { const el = $("#in-"+f); if(el) el.value = S[f]||""; }); }
-function saveSettings(){
-  FIELDS.forEach(f => { const el = $("#in-"+f); if(el) S[f] = el.value.trim(); });
-  persistSettings();
-  toast("Настройки сохранены — подключаюсь…");
-  applyEmbeds();
-  refreshAll(true);
-  showPage("dash");
-}
-function clearSettings(){
-  if(!confirm("Удалить все сохраненные ключи из браузера?")) return;
-  S = {}; persistSettings(); fillSettingsForm(); toast("Ключи удалены");
-  setLive("", "Ожидание API-ключей…");
-}
-
-// ================================================================
-//  РЕАЛЬНЫЕ API-ПОДКЛЮЧЕНИЯ
-// ================================================================
-
-// ---- YouTube Data API v3 (CORS открыт — обычный fetch) ----
-async function fetchYouTube(){
-  if(!S.ytKey || !S.ytChannel) return null;
-  let channelId = S.ytChannel;
-  const base = "https://www.googleapis.com/youtube/v3";
-  if(channelId.startsWith("@")){
-    const r = await fetch(`${base}/channels?part=id&forHandle=${encodeURIComponent(channelId)}&key=${S.ytKey}`);
-    const j = await r.json();
-    if(j.error) throw new Error("YouTube: "+j.error.message);
-    if(!j.items || !j.items.length) throw new Error("YouTube: канал по handle не найден");
-    channelId = j.items[0].id;
-  }
-  const r = await fetch(`${base}/channels?part=statistics,snippet,contentDetails&id=${channelId}&key=${S.ytKey}`);
-  const j = await r.json();
-  if(j.error) throw new Error("YouTube: "+j.error.message);
-  if(!j.items || !j.items.length) throw new Error("YouTube: канал не найден");
-  const it = j.items[0], st = it.statistics;
-  return {
-    channelId,
-    title: it.snippet.title,
-    subs: +st.subscriberCount,
-    views: +st.viewCount,
-    videos: +st.videoCount,
-    uploads: it.contentDetails?.relatedPlaylists?.uploads || null
-  };
-}
-
-// ---- VK API через JSONP (VK не отдает CORS для браузера) ----
-function vkJsonp(method, params){
-  return new Promise((resolve,reject)=>{
-    const cb = "vkcb_" + Math.random().toString(36).slice(2);
-    params = Object.assign({}, params, { access_token: S.vkKey, v: "5.199", callback: cb });
-    const qs = Object.entries(params).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&");
-    const sc = document.createElement("script");
-    const timeout = setTimeout(()=>{ cleanup(); reject(new Error("VK: таймаут запроса")); }, 15000);
-    function cleanup(){ clearTimeout(timeout); delete window[cb]; sc.remove(); }
-    window[cb] = resp => {
-      cleanup();
-      if(resp.error) reject(new Error("VK: "+resp.error.error_msg));
-      else resolve(resp.response);
-    };
-    sc.onerror = ()=>{ cleanup(); reject(new Error("VK: сетевая ошибка")); };
-    sc.src = "https://api.vk.com/method/"+method+"?"+qs;
-    document.head.appendChild(sc);
-  });
-}
-async function fetchVK(){
-  if(!S.vkKey || !S.vkGroup) return null;
-  const g = await vkJsonp("groups.getById", { group_id: S.vkGroup.replace(/^(club|public)/,""), fields:"members_count,activity" });
-  const grp = (g.groups || g)[0];
-  if(!grp) throw new Error("VK: группа не найдена");
-  let posts = [], likes=0, comments=0, views=0, postCount=0;
-  try{
-    const wall = await vkJsonp("wall.get", { owner_id: "-"+grp.id, count: 20 });
-    posts = wall.items || [];
-    postCount = wall.count || posts.length;
-    posts.forEach(p=>{
-      likes += p.likes?.count||0;
-      comments += p.comments?.count||0;
-      views += p.views?.count||0;
-    });
-  }catch(e){ /* стена может быть закрыта — не критично */ }
-  return {
-    id: grp.id, name: grp.name, screen: grp.screen_name,
-    members: grp.members_count, postCount,
-    last20: { likes, comments, views, n: posts.length }
-  };
-}
-
-// ---- Telegram Bot API (CORS открыт — обычный fetch) ----
-async function fetchTelegram(){
-  if(!S.tgToken || !S.tgChannel) return null;
-  const chat = S.tgChannel.startsWith("@") ? S.tgChannel : "@"+S.tgChannel;
-  const r = await fetch(`https://api.telegram.org/bot${S.tgToken}/getChatMemberCount?chat_id=${encodeURIComponent(chat)}`);
-  const j = await r.json();
-  if(!j.ok) throw new Error("Telegram: "+(j.description||"ошибка API"));
-  let title = chat;
-  try{
-    const r2 = await fetch(`https://api.telegram.org/bot${S.tgToken}/getChat?chat_id=${encodeURIComponent(chat)}`);
-    const j2 = await r2.json();
-    if(j2.ok) title = j2.result.title || chat;
-  }catch(e){}
-  return { members: j.result, title, chat };
-}
-
-// ================================================================
-//  ОБНОВЛЕНИЕ ДАННЫХ
-// ================================================================
-async function refreshAll(manual){
-  const anyKey = (S.ytKey&&S.ytChannel)||(S.vkKey&&S.vkGroup)||(S.tgToken&&S.tgChannel);
-  if(!anyKey){
-    setLive("", "Ожидание API-ключей…");
-    if(manual) { toast("Сначала введите API-ключи в Настройках"); showPage("settings"); }
-    return;
-  }
-  setStatus("Загружаю данные из API…");
-  setLive("", "Обновление…");
-  const errors = [];
-  const [yt, vk, tg] = await Promise.all([
-    fetchYouTube().catch(e=>{ errors.push(e.message); return null; }),
-    fetchVK().catch(e=>{ errors.push(e.message); return null; }),
-    fetchTelegram().catch(e=>{ errors.push(e.message); return null; })
-  ]);
-  DATA = { yt, vk, tg, fetchedAt: new Date() };
-  renderStats();
-  pushHistory();
-  drawCharts();
-  applyEmbeds(); // uploads-плейлист YouTube и числовой ID VK становятся известны после запроса
-  scheduleNext();
-  if(errors.length){
-    setLive(yt||vk||tg ? "on":"err", errors.length+" ошибка(и) API");
-    setStatus("Ошибки: " + errors.join(" | "));
-    if(manual) toast("Часть API вернула ошибку — см. строку статуса внизу");
-  } else {
-    setLive("on", "Онлайн · обновлено " + DATA.fetchedAt.toLocaleTimeString("ru-RU"));
-    setStatus("Данные обновлены: " + DATA.fetchedAt.toLocaleTimeString("ru-RU"));
-    if(manual) toast("Данные обновлены ✓");
-  }
-}
-
-function scheduleNext(){
-  clearTimeout(refreshTimer); clearInterval(countdownTimer);
-  nextRefreshAt = Date.now() + REFRESH_MS;
-  refreshTimer = setTimeout(()=>refreshAll(false), REFRESH_MS);
-  countdownTimer = setInterval(()=>{
-    const s = Math.max(0, Math.round((nextRefreshAt-Date.now())/1000));
-    $("#sbRight").textContent = `Следующее автообновление: ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
-  }, 1000);
-}
-
-function renderStats(){
-  const set = (f,v)=>{ $$(`[data-f="${f}"]`).forEach(el=>el.textContent=v); };
-  const key = (k,show)=>{ const el=$(`[data-k="${k}"]`); if(el) el.style.display = show?"":"none"; };
-
-  key("yt", !DATA.yt); key("vk", !DATA.vk); key("tg", !DATA.tg);
-  if(DATA.yt){ set("yt-subs", fmt(DATA.yt.subs)); set("yt-views", fmt(DATA.yt.views)); set("yt-videos", fmt(DATA.yt.videos)); }
-  if(DATA.vk){ set("vk-members", fmt(DATA.vk.members)); set("vk-posts", fmt(DATA.vk.postCount)); }
-  if(DATA.tg){ set("tg-members", fmt(DATA.tg.members)); }
-
-  // --- авторасчеты ---
-  const reach = (DATA.yt?.subs||0)+(DATA.vk?.members||0)+(DATA.tg?.members||0);
-  $("#calcReach").textContent = reach ? fmt(reach) : "—";
-
-  let eng = null;
-  if(DATA.vk && DATA.vk.last20.views>0){
-    eng = calculateEngagement(DATA.vk.last20.views, DATA.vk.last20.likes, DATA.vk.last20.comments);
-  }
-  $("#calcEng").textContent = eng!==null ? eng.toFixed(2)+"%" : "—";
-
-  $("#calcAvgViews").textContent = (DATA.yt && DATA.yt.videos>0) ? fmt(Math.round(DATA.yt.views/DATA.yt.videos)) : "—";
-
-  const growth = estimateGrowth();
-  $("#calcGrowth").textContent = (growth && reach) ? fmt(forecastAudience(reach, growth.daily, 30)) + ` (${growth.label})` : (reach? fmt(reach)+" (мало истории)" : "—");
-}
-
-// ---------- история замеров (localStorage) ----------
-function loadHistory(){ try{ return JSON.parse(localStorage.getItem(LS_HIST))||[]; }catch(e){ return []; } }
-function pushHistory(){
-  const reach = (DATA.yt?.subs||0)+(DATA.vk?.members||0)+(DATA.tg?.members||0);
-  if(!reach) return;
-  const h = loadHistory();
-  const last = h[h.length-1];
-  if(last && Date.now()-last.t < 4*60*1000 && last.r===reach) return;
-  h.push({ t: Date.now(), r: reach, yt: DATA.yt?.subs||0, vk: DATA.vk?.members||0, tg: DATA.tg?.members||0 });
-  while(h.length>500) h.shift();
-  localStorage.setItem(LS_HIST, JSON.stringify(h));
-}
-function estimateGrowth(){
-  const h = loadHistory();
-  if(h.length<2) return null;
-  const first = h[0], last = h[h.length-1];
-  const days = (last.t-first.t)/(24*3600*1000);
-  if(days < 0.01 || first.r<=0) return null;
-  const totalRate = last.r/first.r - 1;
-  const daily = Math.pow(1+totalRate, 1/Math.max(days,0.01)) - 1;
-  const clamped = Math.max(-0.05, Math.min(0.05, daily));
-  return { daily: clamped, label: (clamped>=0?"+":"")+(clamped*100).toFixed(3)+"%/день" };
-}
-
-// ================================================================
-//  ГРАФИКИ (чистый canvas, с анимацией)
-// ================================================================
-function drawCharts(){ drawBars(); drawLine(); }
-
-function drawBars(){
-  const cv = $("#chartPlatforms"), ctx = cv.getContext("2d");
-  const items = [
-    { name:"YouTube",  val: DATA.yt?.subs||0,    col:"#FF0000" },
-    { name:"VK",       val: DATA.vk?.members||0, col:"#0077FF" },
-    { name:"Telegram", val: DATA.tg?.members||0, col:"#2AABEE" }
-  ];
-  const W=cv.width, H=cv.height, pad=60, max=Math.max(...items.map(i=>i.val),1);
-  let t=0;
-  cancelAnimationFrame(drawBars._raf);
-  (function anim(){
-    t=Math.min(1,t+0.06);
-    const e=1-Math.pow(1-t,3);
-    ctx.clearRect(0,0,W,H);
-    ctx.strokeStyle="#2c2c2c"; ctx.lineWidth=1;
-    for(let g=0;g<=4;g++){
-      const y=pad+(H-2*pad)*g/4;
-      ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-30,y);ctx.stroke();
-      ctx.fillStyle="#7a7a7a";ctx.font="16px Segoe UI";ctx.textAlign="right";
-      ctx.fillText(fmt(Math.round(max*(4-g)/4)), pad-8, y+5);
-    }
-    const bw=Math.min(140,(W-2*pad)/items.length*0.5);
-    items.forEach((it,i)=>{
-      const x=pad+(W-pad-30)/items.length*(i+0.5)-bw/2;
-      const h=(H-2*pad)*(it.val/max)*e;
-      const grad=ctx.createLinearGradient(0,H-pad-h,0,H-pad);
-      grad.addColorStop(0,it.col); grad.addColorStop(1,it.col+"55");
-      ctx.fillStyle=grad;
-      roundRect(ctx,x,H-pad-h,bw,Math.max(h,2),8); ctx.fill();
-      ctx.fillStyle="#fff";ctx.font="bold 18px Segoe UI";ctx.textAlign="center";
-      ctx.fillText(it.val?fmt(Math.round(it.val*e)):"нет данных", x+bw/2, H-pad-h-12);
-      ctx.fillStyle="#b3b3b3";ctx.font="15px Segoe UI";
-      ctx.fillText(it.name, x+bw/2, H-pad+24);
-    });
-    if(t<1) drawBars._raf=requestAnimationFrame(anim);
-  })();
-}
-
-function drawLine(){
-  const cv=$("#chartHistory"), ctx=cv.getContext("2d");
-  const h=loadHistory();
-  const W=cv.width,H=cv.height,pad=60;
-  ctx.clearRect(0,0,W,H);
-  if(h.length<2){
-    ctx.fillStyle="#7a7a7a";ctx.font="16px Segoe UI";ctx.textAlign="center";
-    ctx.fillText("Недостаточно замеров — график появится после нескольких обновлений", W/2, H/2);
-    return;
-  }
-  const vals=h.map(p=>p.r), min=Math.min(...vals), max=Math.max(...vals);
-  const range=(max-min)||1;
-  const X=i=>pad+(W-pad-30)*(i/(h.length-1));
-  const Y=v=>H-pad-(H-2*pad)*((v-min)/range);
-  ctx.strokeStyle="#2c2c2c";
-  for(let g=0;g<=3;g++){
-    const y=pad+(H-2*pad)*g/3;
-    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-30,y);ctx.stroke();
-    ctx.fillStyle="#7a7a7a";ctx.font="14px Segoe UI";ctx.textAlign="right";
-    ctx.fillText(fmt(Math.round(max-range*g/3)), pad-8, y+5);
-  }
-  ctx.beginPath();
-  h.forEach((p,i)=> i? ctx.lineTo(X(i),Y(p.r)) : ctx.moveTo(X(i),Y(p.r)));
-  ctx.strokeStyle="#1DB954";ctx.lineWidth=3;ctx.lineJoin="round";ctx.stroke();
-  ctx.lineTo(X(h.length-1),H-pad);ctx.lineTo(X(0),H-pad);ctx.closePath();
-  const g2=ctx.createLinearGradient(0,pad,0,H-pad);
-  g2.addColorStop(0,"#1DB95444");g2.addColorStop(1,"#1DB95400");
-  ctx.fillStyle=g2;ctx.fill();
-  h.forEach((p,i)=>{
-    ctx.beginPath();ctx.arc(X(i),Y(p.r),4,0,7);ctx.fillStyle="#1ed760";ctx.fill();
-  });
-  ctx.fillStyle="#7a7a7a";ctx.font="13px Segoe UI";ctx.textAlign="center";
-  ctx.fillText(new Date(h[0].t).toLocaleString("ru-RU"), pad+70, H-pad+24);
-  ctx.fillText(new Date(h[h.length-1].t).toLocaleString("ru-RU"), W-120, H-pad+24);
-}
-function roundRect(ctx,x,y,w,h,r){
-  r=Math.min(r,w/2,h/2);
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,0);
-  ctx.lineTo(x,y+h);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
-}
-
-// ================================================================
-//  ВСТРАИВАНИЕ СОЦСЕТЕЙ
-// ================================================================
-function applyEmbeds(){
-  // VK widget
-  const vkHolder=$("#vk_widget_holder");
-  vkHolder.innerHTML="";
-  if(S.vkGroup){
-    $("#vkLink").href="https://vk.com/"+S.vkGroup;
-    const div=document.createElement("div"); div.id="vk_groups_w"; vkHolder.appendChild(div);
-    loadScriptOnce("https://vk.com/js/api/openapi.js?169","vkopenapi").then(()=>{
-      const gid = DATA.vk?.id || (/^\d+$/.test(S.vkGroup)? +S.vkGroup : null);
-      if(window.VK && gid){
-        try{ VK.Widgets.Group("vk_groups_w",{mode:4,wide:1,height:500,color1:"181818",color2:"FFFFFF",color3:"1DB954"},gid); }catch(e){}
-      } else {
-        vkHolder.innerHTML='<p style="padding:20px" class="muted">Для виджета нужен числовой ID группы (он подставится автоматически после первого успешного запроса к VK API) — или укажите числовой ID в настройках.</p>';
-      }
-    });
-  } else vkHolder.innerHTML='<p style="padding:20px" class="muted">Укажите группу VK в настройках.</p>';
-
-  // YouTube: uploads playlist embed
-  if(DATA.yt?.uploads){
-    $("#ytFrame").src="https://www.youtube.com/embed/videoseries?list="+DATA.yt.uploads;
-    $("#ytLink").href="https://www.youtube.com/channel/"+DATA.yt.channelId;
-  } else if(S.ytChannel){
-    $("#ytLink").href = S.ytChannel.startsWith("@") ? "https://www.youtube.com/"+S.ytChannel : "https://www.youtube.com/channel/"+S.ytChannel;
-  }
-
-  // Telegram post widget
-  const tgh=$("#tgPostHolder"); tgh.innerHTML="";
-  if(S.tgChannel) $("#tgLink").href="https://t.me/"+S.tgChannel.replace("@","");
-  if(S.tgPost){
-    const sc=document.createElement("script");
-    sc.async=true; sc.src="https://telegram.org/js/telegram-widget.js?22";
-    sc.setAttribute("data-telegram-post", S.tgPost.replace(/^https?:\/\/t\.me\//,""));
-    sc.setAttribute("data-width","100%"); sc.setAttribute("data-dark","1");
-    tgh.appendChild(sc);
-  } else tgh.innerHTML='<p class="muted">Укажите ссылку на пост канала в настройках (например kazanegetlere/12) — Telegram разрешает встраивать только отдельные посты, не весь канал.</p>';
-
-  // Yandex Music iframe
-  if(S.ymArtist){
-    $("#ymFrame").src="https://music.yandex.ru/iframe/artist/"+S.ymArtist;
-    $("#ymLink").href="https://music.yandex.ru/artist/"+S.ymArtist;
-  }
-
-  // TikTok embed
-  if(S.ttUser){
-    const u=S.ttUser.replace("@","");
-    $("#ttFrame").src="https://www.tiktok.com/embed/@"+u;
-    $("#ttLink").href="https://www.tiktok.com/@"+u;
-  }
-}
-function loadScriptOnce(src,id){
-  return new Promise(res=>{
-    if(document.getElementById(id)) return res();
-    const s=document.createElement("script"); s.id=id; s.src=src; s.onload=res; s.onerror=res;
-    document.head.appendChild(s);
-  });
-}
-
-// ================================================================
-//  ИИ-АГЕНТЫ (анализ реальных данных дашборда)
-// ================================================================
-const AGENT_META = {
-  analyst:    { icon:"📈", name:"Аналитик" },
-  strategist: { icon:"🎯", name:"Стратег" },
-  copywriter: { icon:"✍️", name:"Копирайтер" },
-  forecaster: { icon:"🔮", name:"Прогнозист" },
-  ideator:    { icon:"💡", name:"Идейный" }
-};
-let lastReport = "";
-
-function snapshot(){
-  const yt=DATA.yt, vk=DATA.vk, tg=DATA.tg;
-  const reach=(yt?.subs||0)+(vk?.members||0)+(tg?.members||0);
-  const eng = vk && vk.last20.views>0 ? calculateEngagement(vk.last20.views, vk.last20.likes, vk.last20.comments) : null;
-  const growth = estimateGrowth();
-  return { yt, vk, tg, reach, eng, growth,
-    avgYt: yt&&yt.videos? Math.round(yt.views/yt.videos):null,
-    date: new Date().toLocaleString("ru-RU") };
-}
-function noData(){ return !DATA.yt && !DATA.vk && !DATA.tg; }
-
-function runAgent(kind){
-  const m=AGENT_META[kind];
-  const out=$("#agentOut");
-  out.classList.add("show");
-  $("#agentTitle").textContent = m.icon+" "+m.name;
-  $("#agentSpin").style.display="block";
-  $("#agentReport").textContent="";
-  $("#agentActions").style.display="none";
-  out.scrollIntoView({behavior:"smooth",block:"nearest"});
-  setTimeout(()=>{
-    $("#agentSpin").style.display="none";
-    let text;
-    if(noData()){
-      text = "⚠️ Нет подключенных данных.\n\nАгенты работают только с реальной статистикой. Откройте «⚙️ Настройки», введите API-ключи (YouTube / VK / Telegram) и нажмите «Сохранить и подключиться» — после этого запустите агента снова.";
-    } else {
-      text = AGENTS[kind](snapshot());
-    }
-    lastReport = `${m.icon} ${m.name} — отчет от ${new Date().toLocaleString("ru-RU")}\n${"─".repeat(46)}\n${text}`;
-    $("#agentReport").textContent = lastReport;
-    $("#agentActions").style.display="flex";
-  }, 2000);
-}
-
-const AGENTS = {
-  analyst(s){
-    const L=[];
-    L.push(`ОБЩИЙ ОХВАТ: ${fmt(s.reach)} подписчиков на трех платформах.`);
-    if(s.yt) L.push(`\n▶ YouTube: ${fmt(s.yt.subs)} подписчиков, ${fmt(s.yt.views)} суммарных просмотров, ${s.yt.videos} видео. Среднее на видео: ${fmt(s.avgYt)}. ${s.avgYt>s.yt.subs? "Просмотры на видео ПРЕВЫШАЮТ базу подписчиков — контент выходит на внешнюю аудиторию через рекомендации, это сильный сигнал.":"Просмотры ниже базы подписчиков — стоит усилить обложки/заголовки и первые 15 секунд видео."}`);
-    if(s.vk) L.push(`\n▶ VK «${s.vk.name}»: ${fmt(s.vk.members)} участников. Последние ${s.vk.last20.n} постов: ${fmt(s.vk.last20.views)} просмотров, ${fmt(s.vk.last20.likes)} лайков, ${fmt(s.vk.last20.comments)} комментариев. Вовлеченность: ${s.eng!==null? s.eng.toFixed(2)+"%":"н/д"}. ${s.eng!==null ? (s.eng>=5? "Отличный показатель (>5%) — аудитория живая.": s.eng>=1.5? "Норма для музыкальных сообществ (1.5–5%).":"Ниже нормы (<1.5%) — добавьте интерактив: опросы, конкурсы, закулисье."):""}`);
-    if(s.tg) L.push(`\n▶ Telegram «${s.tg.title}»: ${fmt(s.tg.members)} подписчиков. ${s.vk&&s.tg.members<s.vk.members*0.2? "Канал заметно меньше VK — перелейте аудиторию: закреп со ссылкой в VK + эксклюзивы только в TG.":"Хорошая пропорция к остальным платформам."}`);
-    const parts=[["YouTube",s.yt?.subs||0],["VK",s.vk?.members||0],["Telegram",s.tg?.members||0]].sort((a,b)=>b[1]-a[1]);
-    L.push(`\nТРЕНД: ядро аудитории — ${parts[0][0]} (${fmt(parts[0][1])}). ${s.growth? "Текущий темп роста: "+s.growth.label+".":"Истории замеров пока мало — тренд роста появится через несколько обновлений."}`);
-    L.push(`\nРЕКОМЕНДАЦИЯ: слабейшая платформа — ${parts[2][0]}. Направьте туда кросс-промо из ${parts[0][0]} в течение 2 недель и сравните замеры на графике динамики.`);
-    return L.join("\n");
-  },
-  strategist(s){
-    const strongest=[["YouTube",s.yt?.subs||0],["VK",s.vk?.members||0],["Telegram",s.tg?.members||0]].sort((a,b)=>b[1]-a[1])[0][0];
-    return [
-`СТРАТЕГИЯ РЕЛИЗОВ (на основе текущего охвата ${fmt(s.reach)}):`,
-`\n1. ОКНО РЕЛИЗА. Оптимально: четверг 18:00–20:00 мск — трек успевает набрать статистику к пятничным плейлистным обновлениям стримингов, а клип попадает в вечерний прайм VK/YouTube.`,
-`2. КАСКАД АНОНСОВ:\n   • D-7: тизер (15 сек) в ${strongest} — там ваше ядро;\n   • D-3: пре-сейв/напоминание + фрагмент припева;\n   • D-0: релиз везде одновременно + закреп;\n   • D+2: закулисье записи в Telegram (эксклюзив);\n   • D+7: акустическая/live-версия для второй волны.`,
-`3. ЧАСТОТА. ${s.yt&&s.yt.videos<30? "Каталог YouTube небольшой ("+s.yt.videos+" видео) — держите ритм 2 видео/мес (клип или lyric-video + shorts-нарезки).":"Каталог наработан — фокус на качество: 1 крупный релиз + 4–6 shorts/клипов-нарезок в месяц."}`,
-`4. ТАТАРСКАЯ СПЕЦИФИКА. Планируйте релизы под национальные праздники (Сабантуй, Навруз, Дни республики) — сезонный поисковый трафик по татарской музыке в эти недели растет, конкуренция за плейлисты ниже, чем в общероссийские инфоповоды.`,
-`5. КОНТРОЛЬ. ${s.eng!==null? "Вовлеченность VK "+s.eng.toFixed(2)+"% — если после релиза она не вырастет минимум на 20%, меняйте формат анонсов.":"Подключите VK, чтобы отслеживать вовлеченность вокруг релизов."}`
-    ].join("\n");
-  },
-  copywriter(s){
-    const tg=s.tg? "https://t.me/"+s.tg.chat.replace("@",""):"[ссылка на Telegram]";
-    return [
-`ГОТОВЫЕ ПОСТЫ (подставьте название трека):`,
-`\n═══ VK — анонс релиза ═══\n🔥 Дуслар! Новый трек «[НАЗВАНИЕ]» уже совсем близко!\nМы вложили в него всю душу — татарский мелос и современный саунд в одном флаконе. 🎶\n👉 Жмите «Уведомления», чтобы услышать первыми.\nКөтегез! Ждите! ❤️\n#KazanEgetläre #татармузыка #яңажыр`,
-`\n═══ Telegram — эксклюзив ═══\n🎙 Только для своих: 30 секунд «[НАЗВАНИЕ]» до официального релиза.\nЗдесь, в канале, всё выходит раньше. Перешлите другу, который любит татарскую музыку 🤝`,
-`\n═══ VK — после релиза ═══\n«[НАЗВАНИЕ]» уже на всех площадках! 🚀\n▶️ Слушайте, ставьте ❤️ и пишите в комментариях, какая строчка зацепила больше всего — авторов лучших комментариев упомянем в сторис!\nРәхмәт за поддержку, сез иң яхшы тамашачы! 🙌`,
-`\n═══ YouTube — описание клипа ═══\nKazan Egetläre — [НАЗВАНИЕ] (Official Video)\nПодписывайтесь и жмите 🔔 — впереди еще больше музыки.\nTelegram: ${tg}\nVK: ${s.vk? "https://vk.com/"+(s.vk.screen||("club"+s.vk.id)):"[ссылка]"}`,
-`\n💡 Совет: ${s.eng!==null&&s.eng<1.5? "ваша вовлеченность VK сейчас "+s.eng.toFixed(2)+"% — заканчивайте каждый пост вопросом к аудитории, это самый быстрый способ поднять комментарии.":"заканчивайте посты вопросом — комментарии разгоняют охват алгоритмами."}`
-    ].join("\n");
-  },
-  forecaster(s){
-    if(!s.reach) return "Нет данных для прогноза — подключите хотя бы одну платформу.";
-    const g = s.growth ? s.growth.daily : null;
-    const L=[`ТЕКУЩАЯ БАЗА: ${fmt(s.reach)} суммарных подписчиков.`];
-    if(g!==null){
-      L.push(`Измеренный темп: ${s.growth.label} (по истории замеров вашего браузера).`);
-      L.push(`\nПРОГНОЗ (сложный рост по фактическому темпу):\n   • через 30 дней: ${fmt(forecastAudience(s.reach,g,30))}\n   • через 90 дней: ${fmt(forecastAudience(s.reach,g,90))}\n   • через 180 дней: ${fmt(forecastAudience(s.reach,g,180))}`);
-    } else {
-      L.push(`\nИстории замеров пока недостаточно для точного тренда — показываю сценарии:`);
-      [["Консервативный (+0.05%/день)",0.0005],["Базовый (+0.15%/день)",0.0015],["Активное продвижение (+0.5%/день)",0.005]].forEach(([n,r])=>{
-        L.push(`   • ${n}: 30 дн → ${fmt(forecastAudience(s.reach,r,30))}, 90 дн → ${fmt(forecastAudience(s.reach,r,90))}`);
-      });
-      L.push(`\nОставьте дашборд работать — через несколько автообновлений прогноз перейдет на ваш фактический темп роста.`);
-    }
-    L.push(`\nЧТО УСКОРИТ РОСТ: ${s.avgYt&&s.yt&&s.avgYt>s.yt.subs? "YouTube уже дает органический охват сверх базы — вкладывайтесь в Shorts, это самый дешевый канал притока.":"регулярные YouTube Shorts (3–4/нед) исторически дают музыкантам самый быстрый органический приток."} Точка конверсии — закреп со ссылками на все платформы в каждом профиле.`);
-    return L.join("\n");
-  },
-  ideator(s){
-    return [
-`ТЕМЫ ДЛЯ НОВЫХ ПЕСЕН И КОНТЕНТА:`,
-`\n🎵 ПЕСНИ:\n1. «Казан кичләре» (Казанские вечера) — лирика о родном городе; локальная тема стабильно лучший драйвер репостов у региональной аудитории.\n2. Дуэт с русскоязычным артистом — двуязычный трек расширяет аудиторию за пределы татароязычного ядра без потери идентичности.\n3. Современная аранжировка народной песни — формат «фолк-ревайвл» отлично живет в Shorts/Reels и клипах.\n4. Танцевальный трек под Сабантуй — сезонный хит с ежегодным возвратным трафиком.\n5. Баллада о разлуке с родным домом — тема для татарской диаспоры (Москва, Тюмень, зарубежье): расширяет географию прослушиваний.`,
-`\n📹 КОНТЕНТ:\n• Серия «Как звучит татарский» — разбор красивых слов из ваших текстов (виральный формат для Shorts);\n• Репетиции без монтажа в Telegram — сырой контент удерживает ядро${s.tg? " (ваши "+fmt(s.tg.members)+" подписчиков TG — это суперфаны)":""};\n• Челлендж под припев нового трека в VK Клипах;\n• «Один день из жизни группы» — влог перед крупным релизом.`,
-`\n${s.eng!==null? "📊 По вашим данным вовлеченность VK — "+s.eng.toFixed(2)+"%: интерактивные форматы (челлендж, разборы слов) поднимут её быстрее всего.":"📊 Подключите VK API — идеи начнут ранжироваться по вашей фактической вовлеченности."}`
-    ].join("\n");
-  }
-};
-
-function copyReport(){
-  navigator.clipboard.writeText(lastReport).then(()=>toast("Скопировано ✓")).catch(()=>toast("Не удалось скопировать"));
-}
-function saveReport(){
-  downloadText(lastReport, "kazan-egetlare-report.txt");
-  toast("Файл сохранен ✓");
-}
-function exportReport(){
-  const s=snapshot();
-  const lines=[
-    "KAZAN EGETLÄRE — сводный отчет ("+s.date+")","=".repeat(50),
-    "Общий охват: "+fmt(s.reach),
-    s.yt? "YouTube: "+fmt(s.yt.subs)+" подписчиков, "+fmt(s.yt.views)+" просмотров, "+s.yt.videos+" видео":"YouTube: не подключен",
-    s.vk? "VK: "+fmt(s.vk.members)+" участников, вовлеченность "+(s.eng!==null?s.eng.toFixed(2)+"%":"н/д"):"VK: не подключен",
-    s.tg? "Telegram: "+fmt(s.tg.members)+" подписчиков":"Telegram: не подключен",
-    "Прогноз 30 дн: "+(s.growth&&s.reach? fmt(forecastAudience(s.reach,s.growth.daily,30)):"недостаточно истории")
-  ];
-  downloadText(lines.join("\n"), "kazan-egetlare-stats.txt");
-  toast("Отчет скачан ✓");
-}
-function downloadText(text, name){
-  const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob); a.download=name; a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),3000);
-}
-
-// ================================================================
-//  ИНИЦИАЛИЗАЦИЯ
-// ================================================================
-fillSettingsForm();
-applyEmbeds();
-drawCharts();
-refreshAll(false);
-</script>
-
-</body>
-
+<script src="/assets/qr.js"></script>
+<script src="/assets/app.js"></script>
 </body>
 </html>
