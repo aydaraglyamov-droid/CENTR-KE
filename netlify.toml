@@ -1,0 +1,69 @@
+# ==================================================================
+# Kazan Egetläre — static site + two Netlify Functions, no build step.
+# ==================================================================
+
+[build]
+  publish = "."
+  command = ""
+
+[functions]
+  directory = "netlify/functions"
+
+# ---- Release covers come from BandLink's own storage; allow the
+# ---- Netlify Image CDN to resize and re-encode them to webp.
+[images]
+  remote_images = [
+    "https://music-bandlink\\.s3\\.yandex\\.net/.*",
+    "https://.*\\.mds\\.yandex\\.net/.*",
+    "https://avatars\\.mds\\.yandex\\.net/.*"
+  ]
+
+# ---- Security headers -------------------------------------------
+# API keys live in localStorage, so an XSS would be a credential leak:
+# the CSP below is the main line of defence. Every host in it is one
+# this site actually talks to — add a host here if you embed a new
+# widget, do not widen the whole directive.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
+    Content-Security-Policy = """default-src 'self'; \
+      base-uri 'self'; \
+      form-action 'self'; \
+      frame-ancestors 'none'; \
+      object-src 'none'; \
+      script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://yastatic.net https://vk.com https://*.vk.com https://telegram.org; \
+      style-src 'self' 'unsafe-inline' https://vk.com https://*.vk.com https://telegram.org; \
+      font-src 'self' data:; \
+      img-src 'self' data: blob: https:; \
+      media-src 'self' https:; \
+      connect-src 'self' https://www.googleapis.com https://api.telegram.org https://api.vk.com https://mc.yandex.ru https://yastatic.net; \
+      frame-src https://www.youtube.com https://www.youtube-nocookie.com https://music.yandex.ru https://www.tiktok.com https://vk.com https://*.vk.com https://t.me https://oembed.telegram.org https://mc.yandex.ru; \
+      worker-src 'self' blob:; \
+      upgrade-insecure-requests"""
+
+# ---- Caching -----------------------------------------------------
+# Netlify purges the CDN on every deploy, so a long s-maxage is safe
+# even though asset filenames are not content-hashed. Browsers
+# revalidate, which keeps a hard refresh honest.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    cache-control = "public, max-age=0, must-revalidate"
+    netlify-cdn-cache-control = "public, s-maxage=31536000, must-revalidate"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    cache-control = "public, max-age=0, must-revalidate"
+    netlify-cdn-cache-control = "public, s-maxage=604800, must-revalidate"
+
+[[headers]]
+  for = "/assets/favicon.svg"
+  [headers.values]
+    cache-control = "public, max-age=86400"
+    netlify-cdn-cache-control = "public, s-maxage=31536000, must-revalidate"
