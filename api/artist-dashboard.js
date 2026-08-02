@@ -1,6 +1,6 @@
 // api/artist-dashboard.js
-// Serverless для Vercel — аккуратно вызывает внешние API только при наличии env-vars.
-// Не кладите секреты в frontend. Все токены — в Vercel Environment Variables.
+// Версия: отдаёт socials из ENV, иначе использует ваши предоставленные ссылки.
+// Не содержит демо-чисел — только реальные поля (nullable).
 
 const YANDEX_STAT_URL = "https://api-metrika.yandex.net/stat/v1/data";
 
@@ -30,47 +30,55 @@ async function loadYandexMetrika() {
   const url = `${YANDEX_STAT_URL}?${params.toString()}`;
   const r = await fetchJson(url, { headers: { Authorization: "OAuth " + token, Accept: "application/json" } });
   if (!r.ok) return { ok: false, message: "Yandex API error", details: r };
-  // r.json.totals is array matching requested metrics
   const totals = r.json && r.json.totals ? r.json.totals : null;
   const [visits, users, pageviews] = totals || [null, null, null];
   return {
     ok: true,
     data: {
+      audience: users !== null ? Number(users) : null,
       streams: null,
       views: null,
-      audience: users !== null ? Number(users) : null,
       streamsSource: "Yandex.Metrika",
       viewsSource: "Yandex.Metrika",
       audienceSource: "Yandex.Metrika",
-      meta: { visits: visits, pageviews: pageviews }
+      meta: { visits, pageviews }
     }
   };
 }
 
 async function loadBandlink() {
-  // Band.link публичного API может не быть — здесь скелет запроса (только при наличии BANDLINK_API_URL & TOKEN)
   const urlBase = process.env.BANDLINK_API_URL;
   const token = process.env.BANDLINK_API_TOKEN;
   const linkId = process.env.BANDLINK_LINK_ID;
   if (!urlBase || !token || !linkId) return { ok: false, message: "BandLink not configured" };
-
-  // Примерная конструкция — уточните у Band.link документацию/поддержку, endpoint может отличаться.
   const url = `${urlBase.replace(/\/$/, "")}/links/${encodeURIComponent(linkId)}/analytics`;
   const r = await fetchJson(url, { headers: { Authorization: "Bearer " + token, Accept: "application/json" } });
   if (!r.ok) return { ok: false, message: "BandLink API error", details: r };
-  // Преобразуйте полученные данные в формат summary/tracks/platforms
   return { ok: true, data: r.json };
 }
 
 async function loadYouTube() {
-  // Если у вас есть OAuth токен или server-side credentials для YouTube Analytics — реализуйте здесь.
-  // Для простоты: возвращаем not configured.
   return { ok: false, message: "YouTube not configured" };
 }
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
+
+  // socials: берём из ENV, иначе используем ваши ссылки
+  const socials = {
+    telegram: process.env.SOCIAL_TELEGRAM || "https://t.me/kazanegetlare",
+    vk: process.env.SOCIAL_VK || "https://m.vk.ru/kazan_egetlare",
+    youtube: process.env.SOCIAL_YOUTUBE || "https://youtube.com/@kazan_egetlare?si=3Zr04EaO4P8SVA7I",
+    instagram: process.env.SOCIAL_INSTAGRAM || "https://www.instagram.com/kazan_egetlare_official",
+    yandexMusic: process.env.SOCIAL_YANDEX_MUSIC || "https://music.yandex.ru/artist/4160836?ref_id=7998B631-1668-48A4-BD60-E225122D45B3&utm_medium=copy_link",
+    vkMusic: process.env.SOCIAL_VK_MUSIC || "https://m.vk.ru/artist/kazanegetlere_mty2mdezndi2nw?from=%2Faudio&ref=my_artists",
+    appleMusic: process.env.SOCIAL_APPLE_MUSIC || "https://music.apple.com/ru/artist/казан-егетлэре/1465783242",
+    spotify: process.env.SOCIAL_SPOTIFY || "https://open.spotify.com/artist/1LeBwJlewl0ohEQIchqZPP?utm_source=openai",
+    bandlink: process.env.BANDLINK_LINK || "https://band.link/HKtfe",
+    bandlinkManage: process.env.BANDLINK_MANAGE || "https://band.link/manage/analytics/yandex-music",
+    metrikaList: process.env.METRIKA_LIST || "https://metrika.yandex.ru/list?category=myCounters&sort_by=Name"
+  };
 
   const baseArtist = {
     artist: { name: process.env.ARTIST_NAME || "Казан Егетләре", description: process.env.ARTIST_DESC || "" },
@@ -79,18 +87,14 @@ export default async function handler(req, res) {
       streamsSource: "Нет данных", viewsSource: "Нет данных", audienceSource: "Нет данных"
     },
     tracks: [],
-    socials: {
-      telegram: process.env.SOCIAL_TELEGRAM || "",
-      vk: process.env.SOCIAL_VK || "",
-      youtube: process.env.SOCIAL_YOUTUBE || ""
-    },
+    socials,
     geo: [],
     monthly: [],
     platforms: [],
     sources: []
   };
 
-  // Попробуем получить Yandex.Metrika
+  // Yandex
   try {
     const y = await loadYandexMetrika();
     if (y.ok && y.data) {
@@ -104,11 +108,10 @@ export default async function handler(req, res) {
     baseArtist.sources.push({ name: "Yandex.Metrika", status: "error", message: String(e) });
   }
 
-  // Попробуем BandLink (скелет)
+  // BandLink
   try {
     const b = await loadBandlink();
     if (b.ok && b.data) {
-      // Трансформируйте данные в нужный формат — пример ниже лишь placeholder
       baseArtist.sources.push({ name: "BandLink", status: "ok", message: "Данные получены", meta: b.data });
     } else {
       baseArtist.sources.push({ name: "BandLink", status: "not_configured", message: b.message || "no token/url" });
@@ -117,7 +120,7 @@ export default async function handler(req, res) {
     baseArtist.sources.push({ name: "BandLink", status: "error", message: String(e) });
   }
 
-  // YouTube placeholder
+  // YouTube
   try {
     const ytv = await loadYouTube();
     baseArtist.sources.push({ name: "YouTube", status: ytv.ok ? "ok" : "not_configured", message: ytv.message || null });
@@ -125,6 +128,5 @@ export default async function handler(req, res) {
     baseArtist.sources.push({ name: "YouTube", status: "error", message: String(e) });
   }
 
-  // Возвращаем аккуратно — нигде нет "демо" чисел
   return res.status(200).json(baseArtist);
 }
