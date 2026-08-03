@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Centr-KE Artist Dashboard Response",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "artist": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] }
+      },
+      "required": ["name"]
+    },
+
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "streams": { "type": ["integer", "number", "null"] },
+        "views": { "type": ["integer", "number", "null"] },
+        "audience": { "type": ["integer", "number", "null"] },
+        "streamsSource": { "type": ["string", "null"] },
+        "viewsSource": { "type": ["string", "null"] },
+        "audienceSource": { "type": ["string", "null"] }
+      },
+      "required": ["streams", "views", "audience", "streamsSource", "viewsSource", "audienceSource"]
+    },
+
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": ["string", "null"] },
+          "title": { "type": ["string", "null"] },
+          "platform": { "type": ["string", "null"] },
+          "streams": { "type": ["integer", "number", "null"] },
+          "audioUrl": { "type": ["string", "null"], "format": "uri" },
+          "coverUrl": { "type": ["string", "null"], "format": "uri" },
+          "source": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "socials": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "telegram": { "type": ["string", "null"] },
+        "vk": { "type": ["string", "null"] },
+        "youtube": { "type": ["string", "null"] },
+        "instagram": { "type": ["string", "null"] },
+        "yandexMusic": { "type": ["string", "null"] },
+        "vkMusic": { "type": ["string", "null"] },
+        "appleMusic": { "type": ["string", "null"] },
+        "spotify": { "type": ["string", "null"] },
+        "bandlink": { "type": ["string", "null"] },
+        "bandlinkManage": { "type": ["string", "null"] },
+        "metrikaList": { "type": ["string", "null"] }
+      }
+    },
+
+    "geo": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "country": { "type": "string", "minLength": 2 },
+          "plays": { "type": ["integer", "number"] }
+        },
+        "required": ["country", "plays"]
+      }
+    },
+
+    "monthly": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "streams": { "type": ["integer", "number", "null"] },
+          "views": { "type": ["integer", "number", "null"] }
+        },
+        "required": ["date"]
+      }
+    },
+
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "streams": { "type": ["integer", "number", "null"] },
+          "share": { "type": ["number", "null"] }
+        },
+        "required": ["name"]
+      }
+    },
+
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["ok", "not_configured", "error"] },
+          "message": { "type": ["string", "null"] },
+          "meta": {}
+        },
+        "required": ["name", "status"]
+      }
+    }
+  },
+
+  "required": ["artist", "summary", "tracks", "socials", "sources"]
+}
