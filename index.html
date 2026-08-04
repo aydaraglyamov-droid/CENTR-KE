@@ -271,7 +271,7 @@
       <section class="page" id="finance">
         <div class="grid grid-3" style="margin-top:12px">
           <div class="card"><div class="kpi-label">Стриминг</div><div class="kpi-value" id="fStreaming">Нет данных</div></div>
-          <div class="card"><div class="kpi-label">Видео</div><div class="kpi-value" id="fVideo">Нет данных</div></div>
+          <div class="card"><div class="kpi-label">Ви��ео</div><div class="kpi-value" id="fVideo">Нет данных</div></div>
           <div class="card"><div class="kpi-label">Итого</div><div class="kpi-value" id="fTotal">Нет данных</div></div>
         </div>
       </section>
@@ -773,5 +773,9 @@
     if(state.apiBase) { checkHealth().then(()=>{}).catch(()=>{}); }
 
   </script>
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>

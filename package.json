@@ -1,0 +1,16 @@
+{
+  "name": "centr-ke",
+  "version": "1.0.0",
+  "description": "Казан Егетләре — Аналитик Центр",
+  "private": true,
+  "scripts": {
+    "install": "echo 'Dependencies installed'",
+    "test": "echo 'No tests configured'"
+  },
+  "dependencies": {
+    "@vercel/speed-insights": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
