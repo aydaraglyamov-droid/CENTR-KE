@@ -2,6 +2,12 @@
 // POST { code: string, code_verifier: string, redirect_uri?: string }
 // Returns Spotify token response (access_token, refresh_token, expires_in, etc.)
 // Keep SPOTIFY_CLIENT_ID and optional SPOTIFY_CLIENT_SECRET in ENV.
+//
+// Security: by default we DO NOT return refresh_token to frontend.
+// To return refresh_token (dev only), set SPOTIFY_RETURN_REFRESH=true in ENV.
+//
+// For production secure storage of refresh_token, persist it server-side (e.g. Vercel KV, database, or secret store).
+// This file only returns tokens; storage must be implemented separately.
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -39,8 +45,23 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Spotify token exchange failed", details: tokenJson });
     }
 
-    // By design: return full token JSON to frontend (access_token, refresh_token, expires_in).
+    // By default, do not expose refresh_token to the frontend.
+    // For local/dev debugging, set SPOTIFY_RETURN_REFRESH=true in environment to include it.
+    const returnRefresh = String(process.env.SPOTIFY_RETURN_REFRESH || '').toLowerCase() === 'true' || process.env.SPOTIFY_RETURN_REFRESH === '1';
+    if (!returnRefresh && tokenJson && tokenJson.refresh_token) {
+      // copy tokenJson and delete refresh_token
+      const safe = Object.assign({}, tokenJson);
+      delete safe.refresh_token;
+      return res.status(200).json(safe);
+    }
+
     // For stricter security we could persist refresh_token server-side and return only a session id.
+    // Example (conceptual):
+    // if (tokenJson.refresh_token) {
+    //   // persistRefreshTokenForUser(userId, tokenJson.refresh_token)
+    //   // return { access_token: tokenJson.access_token, expires_in: tokenJson.expires_in, session_id: '...' }
+    // }
+
     return res.status(200).json(tokenJson);
   } catch (err) {
     return res.status(500).json({ error: String(err) });
