@@ -4,6 +4,8 @@
   "description": "Казан Егетләре — Аналитик Центр",
   "private": true,
   "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "vercel dev",
     "install": "echo 'Dependencies installed'",
     "test": "echo 'No tests configured'"
   },
