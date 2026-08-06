@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/_vercel/speed-insights/(.*)", "headers": { "cache-control": "public, max-age=31536000, immutable" } }
+  ]
+}
